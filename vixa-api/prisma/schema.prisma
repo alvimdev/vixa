@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum GroupRole {
+  ADMIN
+  MEMBER
+}
+
+enum GiftPriority {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+  FACEBOOK
+  VK
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  avatarUrl String?
+  birthdate DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  authAccounts AuthAccount[]
+  gifts        Gift[]
+  groupMembers GroupMember[]
+  ownedGroups  Group[]       @relation("GroupCreator")
+
+  @@map("users")
+}
+
+model AuthAccount {
+  id             String       @id @default(uuid())
+  userId         String
+  provider       AuthProvider
+  providerUserId String
+  passwordHash   String?
+  createdAt      DateTime     @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@map("auth_accounts")
+}
+
+model Group {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  photoUrl    String?
+  inviteCode  String   @unique
+  createdById String
+  createdAt   DateTime @default(now())
+
+  createdBy        User             @relation("GroupCreator", fields: [createdById], references: [id])
+  members          GroupMember[]
+  giftVisibilities GiftVisibility[]
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id       String    @id @default(uuid())
+  groupId  String
+  userId   String
+  role     GroupRole @default(MEMBER)
+  joinedAt DateTime  @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model Gift {
+  id          String       @id @default(uuid())
+  ownerId     String
+  title       String
+  description String?
+  url         String?
+  imageUrl    String?
+  price       Decimal?     @db.Decimal(10, 2)
+  priority    GiftPriority @default(NONE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  owner     User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  visibleIn GiftVisibility[]
+
+  @@map("gifts")
+}
+
+model GiftVisibility {
+  id      String @id @default(uuid())
+  giftId  String
+  groupId String
+
+  gift  Gift  @relation(fields: [giftId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([giftId, groupId])
+  @@map("gift_visibilities")
+}
