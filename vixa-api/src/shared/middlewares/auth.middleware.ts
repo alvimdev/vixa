@@ -1,17 +1,17 @@
 import { createMiddleware } from 'hono/factory'
 import { verify } from 'hono/jwt'
+import { getCookie } from 'hono/cookie'
 import type { AppEnv } from '@/shared/types/hono.type.js'
+import { COOKIE_NAME } from '@/modules/auth/auth.service.js'
 
 export const requireAuth = createMiddleware<AppEnv>(async (c, next) => {
-  const authHeader = c.req.header('Authorization')
+  const token = getCookie(c, COOKIE_NAME)
 
-  if (!authHeader?.startsWith('Bearer ')) {
+  if (!token) {
     return c.json({ error: 'Token não fornecido' }, 401)
   }
 
-  const token = authHeader.replace('Bearer ', '')
   const secret = process.env.JWT_SECRET
-
   if (!secret) {
     return c.json({ error: 'Configuração de auth ausente' }, 500)
   }

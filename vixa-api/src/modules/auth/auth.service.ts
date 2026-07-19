@@ -5,6 +5,8 @@ import { verifyGoogleToken } from './strategies/google.strategy.js'
 import { localStrategy } from './strategies/local.strategy.js'
 import { AppError, ConflictError } from '@/shared/errors/app.errors.js'
 
+export const COOKIE_NAME = 'vixa_session'
+
 async function issueJwt(userId: string) {
   const secret = process.env.JWT_SECRET
   if (!secret) throw new Error('JWT_SECRET não configurado')

@@ -23,7 +23,7 @@ const corsOrigins = (process.env.CORS_ORIGINS ?? '')
   .map((origin) => origin.trim())
   .filter(Boolean)
 
-app.use('*', cors({ origin: corsOrigins }))
+app.use('*', cors({ origin: corsOrigins, credentials: true }))
 app.use('*', requestLogger)
 
 // Rate limit registrado ANTES de qualquer rota — inclusive /v1 e /v1/health.
