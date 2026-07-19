@@ -3,6 +3,7 @@ import { authService } from '../auth.service.js'
 import { registerSchema, loginSchema, googleLoginSchema } from '../auth.dto.js'
 import { byIp, rateLimit } from '@/shared/middlewares/rateLimit.middleware.js'
 import { bruteForceGuard } from '@/shared/middlewares/bruteforceGuard.middleware.js'
+import { logger } from '@/shared/logging/logger.js'
 
 export const authV1 = new Hono()
 
@@ -29,7 +30,7 @@ authV1.post(
         },
       })
     } catch (err) {
-      console.error(err)
+      logger.warn({ err }, 'google authentication failed')
       return c.json({ error: 'Falha na autenticação com Google' }, 401)
     }
   })

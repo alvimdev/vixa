@@ -1,11 +1,12 @@
 import { createClient } from 'redis'
+import { logger } from '@/shared/logging/logger.js'
 
 export const redis = createClient({
   url: process.env.REDIS_URL!,
 })
 
 redis.on('error', (err) => {
-  console.error('[redis] connection error', err)
+  logger.error({ err }, 'redis connection error')
 })
 
 // node-redis (v4+) exige conexão explícita antes de qualquer comando —
