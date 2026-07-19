@@ -1,5 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 import { redis } from '@/shared/redis/redis.js'
+import { logger } from '@/shared/logging/logger.js'
 
 const TOKEN_BUCKET_SCRIPT = `
 local key = KEYS[1]
@@ -45,23 +46,31 @@ export function rateLimit(options: RateLimitOptions) {
     const key = `ratelimit:${options.keyPrefix}:${identifier}`
     const now = Date.now() / 1000
 
-    const result = (await redis.eval(TOKEN_BUCKET_SCRIPT, {
-      keys: [key],
-      arguments: [
-        String(options.capacity),
-        String(options.refillPerSecond),
-        String(now),
-        '1',
-      ],
-    })) as [number, number]
+    try {
+      const result = (await redis.eval(TOKEN_BUCKET_SCRIPT, {
+        keys: [key],
+        arguments: [
+          String(options.capacity),
+          String(options.refillPerSecond),
+          String(now),
+          '1',
+        ],
+      })) as [number, number]
 
-    const [allowed, remaining] = result
+      const [allowed, remaining] = result
 
-    c.header('X-RateLimit-Limit', String(options.capacity))
-    c.header('X-RateLimit-Remaining', String(Math.floor(remaining)))
+      c.header('X-RateLimit-Limit', String(options.capacity))
+      c.header('X-RateLimit-Remaining', String(Math.floor(remaining)))
 
-    if (allowed === 0) {
-      return c.json({ error: 'Muitas requisições. Tente novamente em instantes.' }, 429)
+      if (allowed === 0) {
+        return c.json({ error: 'Muitas requisições. Tente novamente em instantes.' }, 429)
+      }
+    } catch (err) {
+      // Fail-open deliberado: se o Redis estiver fora do ar, preferimos deixar
+      // a requisição passar (com log) a derrubar a API inteira por causa de
+      // uma dependência auxiliar. O bruteForceGuard nas rotas sensíveis
+      // continua como segunda camada de defesa mesmo nesse cenário.
+      logger.warn({ err }, '[rateLimit] Redis indisponível, aplicando fail-open')
     }
 
     await next()

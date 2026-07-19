@@ -21,27 +21,13 @@ export const app = new Hono()
 const corsOrigins = (process.env.CORS_ORIGINS ?? '')
   .split(',')
   .map((origin) => origin.trim())
-  .filter(Boolean) // remove string vazia se a env var não existir/estiver mal formatada
+  .filter(Boolean)
 
+app.use('*', cors({ origin: corsOrigins }))
 app.use('*', requestLogger)
-app.use(
-  '*',
-  cors({
-    origin: corsOrigins,
-  })
-)
 
-// Ping leve para o cron do Render; não depende de banco nem de Redis.
-app.get('/v1', (c) => c.json({ ok: true }))
-
-// Fica fora do rate limit: se Redis cair, ainda é possível diagnosticar a causa.
-app.get('/v1/health', async (c) => {
-  const health = await getHealth()
-  return c.json(health, health.ok ? 200 : 503)
-})
-
-// Rede de segurança ampla: 100 requisições sustentadas por minuto por IP,
-// com rajada de até 150 (capacity) — protege infra contra flood grosseiro.
+// Rate limit registrado ANTES de qualquer rota — inclusive /v1 e /v1/health.
+// Fail-open garante que uma queda do Redis não derruba diagnóstico nem tráfego normal.
 app.use(
   '*',
   rateLimit({
@@ -50,6 +36,17 @@ app.use(
     keyPrefix: 'global',
     keyGenerator: byIp,
   })
+)
+
+app.get('/v1', (c) => c.json({ ok: true }))
+
+app.get(
+  '/v1/health',
+  rateLimit({ capacity: 20, refillPerSecond: 10 / 60, keyPrefix: 'health', keyGenerator: byIp }),
+  async (c) => {
+    const health = await getHealth()
+    return c.json(health, health.ok ? 200 : 503)
+  }
 )
 
 app.route('/v1', v1)
