@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { usersService } from '../users.service.js'
-import { updateNameSchema, updateAvatarSchema, updateBirthdateSchema } from '../users.dto.js'
+import { updateNameSchema, updateBirthdateSchema } from '../users.dto.js'
+import { rateLimit, byUserId } from '@/shared/middlewares/rateLimit.middleware.js'
 import { requireAuth } from '@/shared/middlewares/auth.middleware.js'
 import type { AppEnv } from '@/shared/types/hono.type.js'
 
@@ -27,16 +28,26 @@ usersV1.patch('/me/name', async (c) => {
   return c.json(user)
 })
 
-usersV1.patch('/me/avatar', async (c) => {
-  const userId = c.get('userId')
-  const body = updateAvatarSchema.parse(await c.req.json())
-  const user = await usersService.updateAvatar(userId, body.avatarUrl)
-  return c.json(user)
-})
-
 usersV1.patch('/me/birthdate', async (c) => {
   const userId = c.get('userId')
   const body = updateBirthdateSchema.parse(await c.req.json())
   const user = await usersService.updateBirthdate(userId, body.birthdate)
   return c.json(user)
 })
+
+usersV1.post(
+  '/me/avatar',
+  rateLimit({ capacity: 10, refillPerSecond: 5 / 60, keyPrefix: 'avatar-upload', keyGenerator: byUserId }),
+  async (c) => {
+    const userId = c.get('userId')
+    const body = await c.req.parseBody()
+    const file = body.avatar
+
+    if (!(file instanceof File)) {
+      return c.json({ error: 'Arquivo de imagem é obrigatório' }, 400)
+    }
+
+    const user = await usersService.uploadAvatar(userId, file)
+    return c.json(user)
+  }
+)

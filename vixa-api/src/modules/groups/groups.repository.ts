@@ -81,6 +81,7 @@ export const groupsRepository = {
       ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
       orderBy: { joinedAt: 'desc' },
       select: {
+        id: true,
         role: true,
         joinedAt: true,
         group: {

@@ -72,14 +72,22 @@ export const giftsRepository = {
     ])
   },
 
-  listByOwner(ownerId: string, limit: number, cursor?: string) {
-    return prisma.gift.findMany({
+  async listByOwner(ownerId: string, limit: number, cursor?: string) {
+    const gifts = await prisma.gift.findMany({
       where: { ownerId },
       take: limit,
       ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
       orderBy: { createdAt: 'desc' },
-      select: giftSelect,
+      select: {
+        ...giftSelect,
+        visibleIn: { select: { groupId: true } },
+      },
     })
+
+    return gifts.map(({ visibleIn, ...gift }) => ({
+      ...gift,
+      groupIds: visibleIn.map((v) => v.groupId),
+    }))
   },
 
   // presentes visíveis dentro de um grupo específico, com dono incluso

@@ -1,6 +1,7 @@
 import { usersRepository } from './users.repository.js'
 import { groupsRepository } from '@/modules/groups/groups.repository.js'
 import { NotFoundError, ForbiddenError } from '@/shared/errors/app.errors.js'
+import { imageUploadService } from '@/shared/uploads/imageUpload.service.js'
 
 export const usersService = {
   async getMyProfile(userId: string) {
@@ -30,5 +31,10 @@ export const usersService = {
 
   updateBirthdate(userId: string, birthdate: Date) {
     return usersRepository.updateBirthdate(userId, birthdate)
+  },
+
+  async uploadAvatar(userId: string, file: File) {
+    const avatarUrl = await imageUploadService.uploadAvatar(userId, file)
+    return usersRepository.updateAvatar(userId, avatarUrl)
   },
 }
