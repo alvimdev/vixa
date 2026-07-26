@@ -22,7 +22,7 @@ export function Avatar({
 
   return (
     <div
-      className="inline-flex items-center justify-center rounded-full bg-[color:var(--color-forest)] font-semibold text-[color:var(--color-paper)]"
+      className="inline-flex items-center justify-center rounded-full bg-forest font-semibold text-paper"
       style={{ width: size, height: size, fontSize: size * 0.42 }}
     >
       {initial}

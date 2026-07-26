@@ -1,7 +1,13 @@
 import { useState } from 'react'
+import { Check, Copy, RefreshCw } from 'lucide-react'
+import { Button } from '@/shared/components/ui/button'
 import { useRegenerateInviteCode } from '../hooks/useRegenerateInviteCode'
 
-export function InviteCodeCard({ groupId, inviteCode, isAdmin }: {
+export function InviteCodeCard({
+  groupId,
+  inviteCode,
+  isAdmin,
+}: {
   groupId: string
   inviteCode: string
   isAdmin: boolean
@@ -9,36 +15,36 @@ export function InviteCodeCard({ groupId, inviteCode, isAdmin }: {
   const [copied, setCopied] = useState(false)
   const regenerate = useRegenerateInviteCode(groupId)
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(inviteCode)
+  const copy = async () => {
+    await navigator.clipboard.writeText(inviteCode)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setTimeout(() => setCopied(false), 1500)
   }
 
   return (
-    <div className="rounded-xl border border-border bg-paper-raised p-5">
-      <p className="mb-2 text-sm text-ink-muted">Código de convite</p>
-      <div className="flex items-center gap-2">
-        <span className="font-display text-2xl font-semibold tracking-wider text-forest">
-          {inviteCode}
-        </span>
+    <section className="rounded-2xl border border-border bg-paper-raised p-5">
+      <h2 className="font-display text-lg">Código de convite</h2>
+      <p className="mt-1 text-xs text-ink-muted">Compartilhe com quem você quer no grupo.</p>
+      <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-paper px-3 py-2.5">
+        <code className="flex-1 font-mono text-sm tracking-wider text-ink">{inviteCode}</code>
         <button
-          onClick={handleCopy}
-          className="rounded-lg border border-border px-3 py-1.5 text-sm text-ink hover:bg-paper"
+          onClick={copy}
+          className="rounded-md p-1.5 text-ink-muted hover:bg-paper-raised hover:text-forest"
+          aria-label="Copiar código"
         >
-          {copied ? 'Copiado!' : 'Copiar'}
+          {copied ? <Check className="h-4 w-4 text-forest" /> : <Copy className="h-4 w-4" />}
         </button>
       </div>
-
       {isAdmin && (
-        <button
+        <Button
           onClick={() => regenerate.mutate()}
           disabled={regenerate.isPending}
-          className="mt-3 text-sm text-raspberry hover:underline disabled:opacity-50"
+          variant="outline"
+          className="mt-3 w-full border-border bg-paper"
         >
-          {regenerate.isPending ? 'Gerando...' : 'Gerar novo código'}
-        </button>
+          <RefreshCw className="mr-2 h-4 w-4" /> {regenerate.isPending ? 'Gerando...' : 'Gerar novo código'}
+        </Button>
       )}
-    </div>
+    </section>
   )
 }

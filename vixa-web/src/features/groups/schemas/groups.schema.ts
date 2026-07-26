@@ -9,6 +9,12 @@ export const joinGroupSchema = z.object({
   inviteCode: z.string().trim().min(4, 'Código muito curto').max(20),
 })
 
+export const updateGroupSchema = z.object({
+  name: z.string().trim().min(1, 'Nome é obrigatório').max(80).optional(),
+  description: z.string().trim().max(300).optional(),
+})
+
+export type UpdateGroupInput = z.infer<typeof updateGroupSchema>
 export type CreateGroupInput = z.infer<typeof createGroupSchema>
 export type JoinGroupInput = z.infer<typeof joinGroupSchema>
 
