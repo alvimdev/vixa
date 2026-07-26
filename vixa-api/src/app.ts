@@ -8,6 +8,7 @@ import { errorHandler } from './shared/middlewares/error.middleware.js'
 import { byIp, rateLimit } from './shared/middlewares/rateLimit.middleware.js'
 import { requestLogger } from './shared/middlewares/requestLogger.middleware.js'
 import { getHealth } from './shared/health/health.service.js'
+import { ensureRedisConnected } from './shared/redis/redis.js'
 
 const v1 = new Hono()
 
@@ -25,6 +26,11 @@ const corsOrigins = (process.env.CORS_ORIGINS ?? '')
 
 app.use('*', cors({ origin: corsOrigins, credentials: true }))
 app.use('*', requestLogger)
+
+app.use('*', async (c, next) => {
+  await ensureRedisConnected() // idempotente: só conecta de verdade na primeira vez do container
+  await next()
+})
 
 // Rate limit registrado ANTES de qualquer rota — inclusive /v1 e /v1/health.
 // Fail-open garante que uma queda do Redis não derruba diagnóstico nem tráfego normal.
@@ -51,3 +57,6 @@ app.get(
 
 app.route('/v1', v1)
 app.onError(errorHandler)
+
+// Export default app for Vercel Edge Functions
+export default app
