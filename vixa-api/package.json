@@ -2,9 +2,9 @@
   "name": "vixa-api",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch src/listener.ts",
     "build:local": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/listener.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "prisma generate",
