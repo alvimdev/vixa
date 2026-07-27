@@ -1,5 +1,5 @@
 import { createMiddleware } from 'hono/factory'
-import { redis } from '../redis/redis.js'
+import { redis } from '@/shared/redis/redis.js'
 
 interface BruteForceOptions {
   keyPrefix: string

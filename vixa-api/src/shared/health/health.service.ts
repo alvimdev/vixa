@@ -1,5 +1,5 @@
-import { prisma } from '../db/prisma.js'
-import { redis } from '../redis/redis.js'
+import { prisma } from '@/shared/db/prisma.js'
+import { redis } from '@/shared/redis/redis.js'
 
 type DependencyStatus = { status: 'up' | 'down'; latencyMs: number }
 

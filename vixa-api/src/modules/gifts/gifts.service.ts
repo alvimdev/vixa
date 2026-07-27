@@ -1,6 +1,6 @@
 import { giftsRepository } from './gifts.repository.js'
 import { groupsRepository } from '../groups/groups.repository.js'
-import { NotFoundError, ForbiddenError } from '../../shared/errors/app.errors.js'
+import { NotFoundError, ForbiddenError } from '@/shared/errors/app.errors.js'
 
 async function assertOwnership(giftId: string, userId: string) {
   const gift = await giftsRepository.findOwnerId(giftId)

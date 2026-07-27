@@ -1,7 +1,7 @@
 import { usersRepository } from './users.repository.js'
-import { groupsRepository } from '../groups/groups.repository.js'
-import { NotFoundError, ForbiddenError } from '../../shared/errors/app.errors.js'
-import { imageUploadService } from '../../shared/uploads/imageUpload.service.js'
+import { groupsRepository } from '@/modules/groups/groups.repository.js'
+import { NotFoundError, ForbiddenError } from '@/shared/errors/app.errors.js'
+import { imageUploadService } from '@/shared/uploads/imageUpload.service.js'
 
 export const usersService = {
   async getMyProfile(userId: string) {

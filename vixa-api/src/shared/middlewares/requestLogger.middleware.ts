@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { createMiddleware } from 'hono/factory'
-import { logger } from '../logging/logger.js'
-import type { AppEnv } from '../types/hono.type.js'
+import { logger } from '@/shared/logging/logger.js'
+import type { AppEnv } from '@/shared/types/hono.type.js'
 
 export const requestLogger = createMiddleware<AppEnv>(async (c, next) => {
   const requestId = c.req.header('x-request-id') ?? randomUUID()

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { ForbiddenError } from '../../shared/errors/app.errors.js'
+import { ForbiddenError } from '@/shared/errors/app.errors.js'
 
 const mocks = vi.hoisted(() => ({ groupsRepository: { findMembership: vi.fn(), listMembers: vi.fn() } }))
 vi.mock('./groups.repository.js', () => ({ groupsRepository: mocks.groupsRepository }))

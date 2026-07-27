@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({ prisma: { $queryRaw: vi.fn() }, redis: { ping: vi.fn() } }))
-vi.mock('./db/prisma.js', () => ({ prisma: mocks.prisma }))
-vi.mock('../redis/redis.js', () => ({ redis: mocks.redis }))
+vi.mock('@/shared/db/prisma.js', () => ({ prisma: mocks.prisma }))
+vi.mock('@/shared/redis/redis.js', () => ({ redis: mocks.redis }))
 const { getHealth } = await import('./health.service.js')
 
 describe('getHealth', () => {

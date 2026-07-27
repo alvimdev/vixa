@@ -5,8 +5,8 @@ const mocks = vi.hoisted(() => ({
   redis: { ping: vi.fn(), eval: vi.fn() },
 }))
 
-vi.mock('./shared/db/prisma.js', () => ({ prisma: mocks.prisma }))
-vi.mock('./shared/redis/redis.js', () => ({ redis: mocks.redis }))
+vi.mock('@/shared/db/prisma.js', () => ({ prisma: mocks.prisma }))
+vi.mock('@/shared/redis/redis.js', () => ({ redis: mocks.redis }))
 
 const { app } = await import('./app.js')
 

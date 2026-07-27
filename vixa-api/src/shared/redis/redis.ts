@@ -1,5 +1,5 @@
 import { createClient } from 'redis'
-import { logger } from '../logging/logger.js'
+import { logger } from '@/shared/logging/logger.js'
 
 export const redis = createClient({
   url: process.env.REDIS_URL!,

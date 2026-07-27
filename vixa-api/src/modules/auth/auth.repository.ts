@@ -1,5 +1,5 @@
-import { prisma } from '../../shared/db/prisma.js'
-import type { AuthProvider } from '../../../prisma/generated/prisma/client.js'
+import { prisma } from '@/shared/db/prisma.js'
+import type { AuthProvider } from '@generated/prisma/client.js'
 
 export const authRepository = {
   findByProvider(provider: AuthProvider, providerUserId: string) {

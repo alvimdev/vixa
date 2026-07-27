@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { ForbiddenError, NotFoundError } from '../../shared/errors/app.errors.js'
+import { ForbiddenError, NotFoundError } from '@/shared/errors/app.errors.js'
 
 const mocks = vi.hoisted(() => ({
   giftsRepository: { findOwnerId: vi.fn(), update: vi.fn(), create: vi.fn() },

@@ -1,5 +1,5 @@
-import { prisma } from '../../shared/db/prisma.js'
-import type { GiftPriority } from '../../../prisma/generated/prisma/client.js'
+import { prisma } from '@/shared/db/prisma.js'
+import type { GiftPriority } from '@generated/prisma/client.js'
 
 const giftSelect = {
   id: true,

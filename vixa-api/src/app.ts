@@ -9,6 +9,7 @@ import { byIp, rateLimit } from './shared/middlewares/rateLimit.middleware.js'
 import { requestLogger } from './shared/middlewares/requestLogger.middleware.js'
 import { getHealth } from './shared/health/health.service.js'
 import { ensureRedisConnected } from './shared/redis/redis.js'
+import { handle } from 'hono/vercel'
 
 const v1 = new Hono()
 
@@ -58,5 +59,6 @@ app.get(
 app.route('/v1', v1)
 app.onError(errorHandler)
 
-// Export the Hono app directly so Vercel can adapt it to its runtime.
-export default app
+// Export default app for Vercel Edge Functions
+export const REQ_HANDLE = handle(app)
+export default handle(app)
