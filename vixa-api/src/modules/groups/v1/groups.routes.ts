@@ -1,11 +1,11 @@
 import { Hono } from 'hono'
 import { groupsService } from '../groups.service.js'
 import { createGroupSchema, updateGroupSchema, joinGroupSchema } from '../groups.dto.js'
-import { paginationSchema } from '@/shared/dtos/pagination.dto.js'
-import { requireAuth } from '@/shared/middlewares/auth.middleware.js'
-import type { AppEnv } from '@/shared/types/hono.type.js'
-import { byIp, rateLimit } from '@/shared/middlewares/rateLimit.middleware.js'
-import { bruteForceGuard } from '@/shared/middlewares/bruteforceGuard.middleware.js'
+import { paginationSchema } from '../../../shared/dtos/pagination.dto.js'
+import { requireAuth } from '../../../shared/middlewares/auth.middleware.js'
+import type { AppEnv } from '../../../shared/types/hono.type.js'
+import { byIp, rateLimit } from '../../../shared/middlewares/rateLimit.middleware.js'
+import { bruteForceGuard } from '../../../shared/middlewares/bruteforceGuard.middleware.js'
 
 export const groupsV1 = new Hono<AppEnv>()
 

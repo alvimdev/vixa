@@ -1,5 +1,5 @@
-import { prisma } from '@/shared/db/prisma.js'
-import type { GroupRole } from '@generated/prisma/client.js'
+import { prisma } from '../../shared/db/prisma.js'
+import type { GroupRole } from '../../../prisma/generated/prisma/client.js'
 
 export const groupsRepository = {
   create(data: { name: string; description?: string; createdById: string; inviteCode: string }) {

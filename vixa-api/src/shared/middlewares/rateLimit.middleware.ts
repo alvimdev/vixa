@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory'
-import { redis } from '@/shared/redis/redis.js'
-import { logger } from '@/shared/logging/logger.js'
+import { redis } from '../redis/redis.js'
+import { logger } from '../logging/logger.js'
 
 const TOKEN_BUCKET_SCRIPT = `
 local key = KEYS[1]

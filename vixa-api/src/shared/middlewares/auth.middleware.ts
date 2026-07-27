@@ -1,8 +1,8 @@
 import { createMiddleware } from 'hono/factory'
 import { verify } from 'hono/jwt'
 import { getCookie } from 'hono/cookie'
-import type { AppEnv } from '@/shared/types/hono.type.js'
-import { COOKIE_NAME } from '@/modules/auth/auth.service.js'
+import type { AppEnv } from '../types/hono.type.js'
+import { COOKIE_NAME } from '../../modules/auth/auth.service.js'
 
 export const requireAuth = createMiddleware<AppEnv>(async (c, next) => {
   const token = getCookie(c, COOKIE_NAME)

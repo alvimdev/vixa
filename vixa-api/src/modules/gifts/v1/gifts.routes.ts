@@ -1,10 +1,10 @@
 import { Hono } from 'hono'
 import { giftsService } from '../gifts.service.js'
 import { createGiftSchema, updateGiftSchema, setVisibilitySchema } from '../gifts.dto.js'
-import { paginationSchema } from '@/shared/dtos/pagination.dto.js'
-import { requireAuth } from '@/shared/middlewares/auth.middleware.js'
-import { groupsV1 } from '@/modules/groups/v1/groups.routes.js'
-import type { AppEnv } from '@/shared/types/hono.type.js'
+import { paginationSchema } from '../../../shared/dtos/pagination.dto.js'
+import { requireAuth } from '../../../shared/middlewares/auth.middleware.js'
+import { groupsV1 } from '../../groups/v1/groups.routes.js'
+import type { AppEnv } from '../../../shared/types/hono.type.js'
 
 export const giftsV1 = new Hono<AppEnv>()
 
