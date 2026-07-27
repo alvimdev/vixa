@@ -3,7 +3,6 @@ import type {
   PrivateProfile,
   PublicProfile,
   UpdateNameInput,
-  UpdateAvatarInput,
   UpdateBirthdateInput,
 } from '../schemas/users.schema'
 

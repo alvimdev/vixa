@@ -1,4 +1,4 @@
-import { useTheme } from '../../app/providers/ThemeProvider'
+import { useTheme } from '@/app/providers/ThemeProvider'
 
 const options = [
   { value: 'light' as const, label: 'Claro' },
