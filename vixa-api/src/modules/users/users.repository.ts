@@ -1,4 +1,4 @@
-import { prisma } from '@/shared/db/prisma.js'
+import { prisma } from '../../shared/db/prisma.js'
 
 const publicUserSelect = {
   id: true,

@@ -1,9 +1,9 @@
 import { Hono } from 'hono'
 import { usersService } from '../users.service.js'
 import { updateNameSchema, updateBirthdateSchema } from '../users.dto.js'
-import { rateLimit, byUserId } from '@/shared/middlewares/rateLimit.middleware.js'
-import { requireAuth } from '@/shared/middlewares/auth.middleware.js'
-import type { AppEnv } from '@/shared/types/hono.type.js'
+import { rateLimit, byUserId } from '../../../shared/middlewares/rateLimit.middleware.js'
+import { requireAuth } from '../../../shared/middlewares/auth.middleware.js'
+import type { AppEnv } from '../../../shared/types/hono.type.js'
 
 export const usersV1 = new Hono<AppEnv>()
 

@@ -1,15 +1,15 @@
 import { Hono } from 'hono'
 import { authService } from '../auth.service.js'
 import { registerSchema, loginSchema, googleLoginSchema } from '../auth.dto.js'
-import { byIp, rateLimit } from '@/shared/middlewares/rateLimit.middleware.js'
-import { bruteForceGuard } from '@/shared/middlewares/bruteforceGuard.middleware.js'
+import { byIp, rateLimit } from '../../../shared/middlewares/rateLimit.middleware.js'
+import { bruteForceGuard } from '../../../shared/middlewares/bruteforceGuard.middleware.js'
 import { setCookie } from 'hono/cookie'
 import { deleteCookie } from 'hono/cookie'
 import { getCookie } from 'hono/cookie'
 import { verify } from 'hono/jwt'
-import { usersRepository } from '@/modules/users/users.repository.js'
+import { usersRepository } from '../../users/users.repository.js'
 import { COOKIE_NAME } from '../auth.service.js'
-import { logger } from '@/shared/logging/logger.js'
+import { logger } from '../../../shared/logging/logger.js'
 
 export const authV1 = new Hono()
 

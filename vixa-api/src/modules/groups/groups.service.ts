@@ -1,6 +1,6 @@
 import { groupsRepository } from './groups.repository.js'
-import { generateInviteCode } from '@/shared/utils/invite.utils.js'
-import { NotFoundError, ForbiddenError, ConflictError } from '@/shared/errors/app.errors.js'
+import { generateInviteCode } from '../../shared/utils/invite.utils.js'
+import { NotFoundError, ForbiddenError, ConflictError } from '../../shared/errors/app.errors.js'
 
 async function generateUniqueInviteCode(): Promise<string> {
   // Colisão é extremamente improvável (32^7 combinações), mas protegemos mesmo assim
